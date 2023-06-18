@@ -1,0 +1,71 @@
+-- CONCEITOS
+
+-- JOIN junta tabelas. Tem alguns tipos. Precisa ter uma coluna comum nas duas tabelas. Usa no FROM. tabela1 JOIN tabela2 ON tabela1.colunaComum = tabela2.colunaComum
+-- As colunas em comum não precisão ter o mesmo nome (a confirmar...)
+
+-- INNER JOIN é o padrão (pode usar só JOIN)
+-- INNER JOIN dá como resultado o que aparece em comum nas duas tabelas. se na tabela 1 aparece algum EmployeeID que não tem na tabela 2, esse dado não irá aparecer aqui.
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+INNER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+
+-- FULL OUTER JOIN dá como resultado tudo que aparece nas duas tabelas. Os dados ausentes na tabela sem o EmployeeID de tabela1 ou tabela2 é preenchido com NULL
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+FULL OUTER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+
+-- LEFT OUTER JOIN dá como resultado tudo que aparece na 1ª tabela. os dados ausentes na 2ª tabela são preenchidos com NULL
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+LEFT OUTER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+
+-- RIGHT OUTER JOIN dá como resultado tudo que aparece na 2ª tabela. os dados ausentes na 1ª tabela são preenchidos com NULL
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+RIGHT OUTER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+ 
+ 
+-- IMPORTANTE
+-- Se escolher a coluna em comum no SELECT, precisa especificar de que tabela ela vem.
+-- A informação muda se a coluna for da 1ª ou 2ª coluna, dependendo se usar LEFT / RIGHT OUTER JOIN
+SELECT EmployeeDemographics.EmployeeID,  FirstName, LastName, JobTitle, Salary
+FROM SQLTutorial.dbo.EmployeeDemographics
+RIGHT OUTER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+
+SELECT EmployeeDemographics.EmployeeID,  FirstName, LastName, JobTitle, Salary
+FROM SQLTutorial.dbo.EmployeeDemographics
+LEFT OUTER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+	
+SELECT EmployeeSalary.EmployeeID,  FirstName, LastName, JobTitle, Salary
+FROM SQLTutorial.dbo.EmployeeDemographics
+LEFT OUTER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+
+SELECT EmployeeSalary.EmployeeID,  FirstName, LastName, JobTitle, Salary
+FROM SQLTutorial.dbo.EmployeeDemographics
+RIGHT OUTER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+
+
+-- APLICAÇÔES
+-- Descobrir quem tem o maior salário, mas excluir o chefe Michael
+SELECT  FirstName, LastName, Salary
+FROM SQLTutorial.dbo.EmployeeDemographics
+INNER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+WHERE FirstName <> 'Michael'
+ORDER BY Salary DESC
+
+-- Descobrir a média salarial dos vendedores (salesman)
+SELECT  JobTitle, AVG(Salary)
+FROM SQLTutorial.dbo.EmployeeDemographics
+INNER JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+WHERE JobTitle = 'Salesman'
+GROUP BY JobTitle
