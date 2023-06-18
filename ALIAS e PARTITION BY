@@ -1,0 +1,21 @@
+-- ALIAS: pode ser usado para mudar nome de coluna no SELECT e tambem nome de tabela no FROM
+SELECT FirstName AS Fname
+FROM SQLTutorial.dbo.EmployeeDemographics
+
+-- não é obrigatório, pode simplesmente apagar o AS
+SELECT FirstName Fname
+FROM SQLTutorial.dbo.EmployeeDemographics
+
+-- no SELECT é possível unir informações das colunas em uma só
+SELECT FirstName + ' ' + LastName AS Name
+FROM SQLTutorial.dbo.EmployeeDemographics
+
+-- usar AS para nomes de tabela é bom quando usa JOIN
+SELECT Demo.EmployeeID, Sal.Salary
+FROM SQLTutorial.dbo.EmployeeDemographics AS Demo
+JOIN SQLTutorial.dbo.EmployeeSalary AS Sal
+	ON Demo.EmployeeID = Sal.EmployeeID
+  
+  ______________________________________________________________________________
+  -- PARTITION BY
+  
