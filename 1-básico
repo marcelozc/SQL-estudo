@@ -15,6 +15,14 @@ JobTitle varchar(50),
 Salary int
 )
 
+--Criar tabela 3:
+Create Table WareHouseEmployeeDemographics 
+(EmployeeID int, 
+FirstName varchar(50), 
+LastName varchar(50), 
+Age int, 
+Gender varchar(50)
+)
 
 
 --INSERIR DADOS EM TABELAS
@@ -42,7 +50,12 @@ Insert Into EmployeeSalary VALUES
 (1008, 'Salesman', 48000),
 (1009, 'Accountant', 42000)
 
-
+--Tabela 3 Insert:
+Insert into WareHouseEmployeeDemographics VALUES
+(1013, 'Darryl', 'Philbin', NULL, 'Male'),
+(1050, 'Roy', 'Anderson', 31, 'Male'),
+(1051, 'Hidetoshi', 'Hasagawa', 40, 'Male'),
+(1052, 'Val', 'Johnson', 31, 'Female')
 
 -- USO DO SELECT
 -- seleciona tudo
