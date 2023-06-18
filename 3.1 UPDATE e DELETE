@@ -1,0 +1,25 @@
+-- Atualizar uma tabela (UPDATE)
+-- UPDATE tabelaX SET coluna WHERE xxx
+-- se só fizer UPDATE tabelaX SET coluna sem especificar, vai mudar todos os campos da coluna.
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+
+UPDATE SQLTutorial.dbo.EmployeeDemographics
+SET EmployeeID = 1012
+WHERE FirstName = 'Holly' AND LastName = 'Flax'
+
+UPDATE SQLTutorial.dbo.EmployeeDemographics
+SET Age = 31, Gender = 'Female'
+WHERE FirstName = 'Holly' AND LastName = 'Flax'
+
+
+-- deletar (DELETE): remove a linha inteira
+-- usar com cuidado pois não é possível reverter. Se fizer o comando sem o WHERE, vai deletar toda a tabela
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+
+DELETE FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE EmployeeID = 1005
+
+-- uma dica para evitar deletar o que não quer é primeiro criar um SELECT, escolher o que quer deletar e executar para ver a saída.
+-- se estiver certo, apaga o SELECT, coloca DELETE e executa
