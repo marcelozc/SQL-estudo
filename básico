@@ -1,0 +1,170 @@
+-- CRIAÇÃO DE TABELAS
+--Criar tabela 1:
+Create Table EmployeeDemographics 
+(EmployeeID int, 
+FirstName varchar(50), 
+LastName varchar(50), 
+Age int, 
+Gender varchar(50)
+)
+
+--Criar tabela 2:
+Create Table EmployeeSalary 
+(EmployeeID int, 
+JobTitle varchar(50), 
+Salary int
+)
+
+
+
+--INSERIR DADOS EM TABELAS
+--Tabela 1 Insert:
+Insert into EmployeeDemographics VALUES
+(1001, 'Jim', 'Halpert', 30, 'Male'),
+(1002, 'Pam', 'Beasley', 30, 'Female'),
+(1003, 'Dwight', 'Schrute', 29, 'Male'),
+(1004, 'Angela', 'Martin', 31, 'Female'),
+(1005, 'Toby', 'Flenderson', 32, 'Male'),
+(1006, 'Michael', 'Scott', 35, 'Male'),
+(1007, 'Meredith', 'Palmer', 32, 'Female'),
+(1008, 'Stanley', 'Hudson', 38, 'Male'),
+(1009, 'Kevin', 'Malone', 31, 'Male')
+
+--Tabela 2 Insert:
+Insert Into EmployeeSalary VALUES
+(1001, 'Salesman', 45000),
+(1002, 'Receptionist', 36000),
+(1003, 'Salesman', 63000),
+(1004, 'Accountant', 47000),
+(1005, 'HR', 50000),
+(1006, 'Regional Manager', 65000),
+(1007, 'Supplier Relations', 41000),
+(1008, 'Salesman', 48000),
+(1009, 'Accountant', 42000)
+
+
+
+-- USO DO SELECT
+-- seleciona tudo
+SELECT *
+FROM EmployeeDemographics
+
+-- seleciona os 5 primeiros de tudo
+SELECT TOP 5 *
+FROM EmployeeDemographics
+
+-- seleciona apenas valores diferentes da(s) coluna(s) selecionadas
+SELECT DISTINCT(EmployeeID)
+FROM EmployeeDemographics
+
+-- conta quantos valores não nulos tem na(s) coluna(s) selecionadas
+SELECT COUNT(EmployeeID)
+FROM EmployeeDemographics
+
+-- AS dá um nome à coluna criada
+SELECT COUNT(EmployeeID) AS LastNameCount
+FROM EmployeeDemographics
+
+-- fala qual o valor máximo (MIN dá o mínimo / AVG dá a média (average))
+SELECT MAX(Salary)
+FROM EmployeeSalary
+
+-- **observação: o FROM pode ser escrito de maneira mais "geral", indicando o caminho completo até a tabela desejada. Ex.: FROM SQLTutorial.dbo.EmployeeSalary
+
+
+
+-- USO DO WHERE
+-- igual
+SELECT *
+FROM EmployeeDemographics
+WHERE FirstName = 'Jim'
+
+-- diferente
+SELECT *
+FROM EmployeeDemographics
+WHERE FirstName <> 'Jim'
+
+-- menor (se for palavra usa ordem alfabética). o mesmo para >, <=, >=
+SELECT *
+FROM EmployeeDemographics
+WHERE Age < 30
+
+-- AND se for colocar "n" condiçoes obrigatórias e OR para pelo menos uma das "n"
+SELECT *
+FROM EmployeeDemographics
+WHERE Age < 33 AND Gender = 'Male'
+
+-- mais comum para texto, seria todos que parecem com...
+-- Existe os "wildcards" que são símbolos que indicam que pode ter qualquer coisa depois deles. No caso usou %
+-- 'S%' qualquer um que começa com S / '%S%' qqr um que tenha S em qualquer lugar no sobrenome / 'S%o%' qqr um que começa com S e tem o depois
+SELECT *
+FROM EmployeeDemographics
+WHERE LastName LIKE 'S%'
+
+-- qual da coluna é vazio. is NOT NULL é qual da coluna não é vazio
+SELECT *
+FROM EmployeeDemographics
+WHERE EmployeeID is NOT NULL
+
+-- dentro das condições dadas entre () e separadas por ,
+SELECT *
+FROM EmployeeDemographics
+WHERE FirstName IN ('Jim', 'Michael')
+
+
+
+-- GROUP BY e ORDER BY
+-- GROUP BY junta os mesmos tipos da coluna escolhida em GROUP BY e soma as informações da outra coluna em SELECT
+SELECT Gender, COUNT(Gender) AS count_gender
+FROM EmployeeDemographics
+GROUP BY Gender
+
+-- GROUP BY pode ter mais de uma coluna, mas a mesma deve estar em SELECT
+SELECT Gender, Age, COUNT(Gender) AS count_gender
+FROM EmployeeDemographics
+GROUP BY Gender, Age
+
+-- Obs.: COUNT(Gender) é uma coluna derivada,fictícia, não uma coluna real. Não pode ser colocada em GROUP BY por exemplo
+
+-- pode continuar usando WHERE aqui e o GROUP BY vai levar ele em consideração
+SELECT Gender, COUNT(Gender) AS count_gender
+FROM EmployeeDemographics
+WHERE Age > 31
+GROUP BY Gender
+
+-- ORDER BY ordena a coluna escolhida pela ordem crescente (para números)
+SELECT Gender, COUNT(Gender) AS count_gender
+FROM EmployeeDemographics
+WHERE Age > 31
+GROUP BY Gender
+ORDER BY count_gender
+
+-- ORDER BY ordena a coluna escolhida pela ordem alfabética (para palavras) 
+SELECT Gender, COUNT(Gender) AS count_gender
+FROM EmployeeDemographics
+WHERE Age > 31
+GROUP BY Gender
+ORDER BY Gender
+
+-- para ser decrescente, usa DESC depois de escolher a coluna
+SELECT Gender, COUNT(Gender) AS count_gender
+FROM EmployeeDemographics
+WHERE Age > 31
+GROUP BY Gender
+ORDER BY Gender DESC
+
+-- escolhendo mais de uma coluna, 1º vai ordenar pela coluna 1, depois se na 1 tiver dados iguais, vai ordenar de acordo com a 2ª coluna
+SELECT *
+FROM EmployeeDemographics
+ORDER BY Age, Gender
+
+-- exemplo usando descendente apenas na coluna 1 enquanto a 2ª coluna continua no padrão
+SELECT *
+FROM EmployeeDemographics
+ORDER BY Age DESC, Gender
+
+-- DICA:
+-- no ORDER BY não precisa colocar o nome das colunas, pode apenas colocar o número delas seguindo a sequÊncia original se usar SELECT * ou a sequência colocada no SELECT
+SELECT *
+FROM EmployeeDemographics
+ORDER BY 4 DESC, 5
