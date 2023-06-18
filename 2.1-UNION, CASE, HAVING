@@ -1,0 +1,95 @@
+-- UNION
+-- UNION parece com JOIN, mas deve ser usado apenas entre tabelas que possuem as mesmas colunas. Depois não precisa escolher a tabela que ta usando
+-- ele exclui os dados repetidos entre tabelas
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+UNION
+SELECT *
+FROM SQLTutorial.dbo.WareHouseEmployeeDemographics
+
+-- UNION ALL mostra os dados repetidos
+SELECT *
+FROM SQLTutorial.dbo.EmployeeDemographics
+UNION ALL
+SELECT *
+FROM SQLTutorial.dbo.WareHouseEmployeeDemographics
+
+---------------------------------------------------------------------------------------------------------
+-- CASE
+-- CASE vai dentro do SELECT, cria uma nova coluna com condição (parecido com IF)
+-- CASE xx (condição) THEN xx (o que "imprime") ELSE xx END
+-- IMPORTANTE: antes do case precisa ter uma vírgula, já que ele é mais uma coluna em SELECT
+-- Depois de END pode colocar AS para dar nome à coluna
+SELECT FirstName, LastName, Age,
+CASE
+	WHEN Age > 30 THEN 'Old'
+	ELSE 'Young'
+END AS Categoria
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE Age IS NOT NULL
+ORDER BY Age
+
+-- Pode ter mais de 1 WHEN. O SQL para na primeira condição que for verdadeira
+SELECT FirstName, LastName, Age,
+CASE
+	WHEN Age > 30 THEN 'Old'
+	WHEN Age BETWEEN 27 AND 30 THEN 'Young'
+	ELSE 'Baby'
+END
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE Age IS NOT NULL
+ORDER BY Age
+
+-- Como o SQL para na primeira condição que for verdadeira, a condição Age = 38 não será usada e Stanley vai ficar como Old
+SELECT FirstName, LastName, Age,
+CASE
+	WHEN Age > 30 THEN 'Old'
+	WHEN Age = 38 THEN 'Stanley'
+	ELSE 'Baby'
+END
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE Age IS NOT NULL
+ORDER BY Age
+
+-- Aqui vai funcionar
+SELECT FirstName, LastName, Age,
+CASE
+	WHEN Age = 38 THEN 'Stanley'
+	WHEN Age > 30 THEN 'Old'
+	ELSE 'Baby'
+END
+FROM SQLTutorial.dbo.EmployeeDemographics
+WHERE Age IS NOT NULL
+ORDER BY Age
+
+-- EXEMPLO de aplicação: quer dar um aumento aos funcionários, mas cada profissão terá um aumento diferente
+SELECT FirstName, LastName, JobTitle, Salary,
+CASE
+	WHEN JobTitle = 'Salesman' THEN Salary + (Salary * 0.10)
+	WHEN JobTitle = 'Accountant' THEN Salary + (Salary * 0.05)
+	WHEN JobTitle = 'HR' THEN Salary + (Salary * 0.000001)
+	ELSE Salary + (Salary * 0.03)
+END AS SalaryAfterRaise
+FROM SQLTutorial.dbo.EmployeeDemographics
+JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+  
+  ---------------------------------------------------------------------------------------------------------
+-- HAVING
+-- é o WHERE para colunas fictícias. Deve vir sempre depois de GROUP BY
+SELECT JobTitle, COUNT(JobTitle)
+FROM SQLTutorial.dbo.EmployeeDemographics
+JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+GROUP BY JobTitle
+HAVING COUNT(JobTitle) > 1
+
+-- Outro exemplo. Notar que usou a coluna em order by e funcionou
+SELECT JobTitle, AVG(Salary)
+FROM SQLTutorial.dbo.EmployeeDemographics
+JOIN SQLTutorial.dbo.EmployeeSalary
+	ON EmployeeDemographics.EmployeeID = EmployeeSalary.EmployeeID
+GROUP BY JobTitle
+HAVING AVG(Salary) > 45000
+ORDER BY AVG(Salary)
+  
