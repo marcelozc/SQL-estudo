@@ -16,6 +16,11 @@ FROM SQLTutorial.dbo.EmployeeDemographics AS Demo
 JOIN SQLTutorial.dbo.EmployeeSalary AS Sal
 	ON Demo.EmployeeID = Sal.EmployeeID
   
-  ______________________________________________________________________________
-  -- PARTITION BY
-  
+______________________________________________________________________________
+-- PARTITION BY
+-- PARTITION BY é parecido com group by, mas o resultado da pesquisa é diferente (não agrupa as linhas, apenas reorganiza)
+SELECT FirstName, LastName, Gender, Salary,
+COUNT(Gender) OVER (PARTITION BY Gender) AS TotalGender
+FROM SQLTutorial.dbo.EmployeeDemographics dem
+JOIN SQLTutorial.dbo.EmployeeSalary sal
+	ON dem.EmployeeID = sal.EmployeeID
