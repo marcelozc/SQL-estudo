@@ -1,0 +1,33 @@
+-- SUBQUERIES: são consulas dentro de consultas. pode usar no select, from, where, insert, update, delete
+
+SELECT *
+FROM EmployeeSalary
+
+-- subquery em SELECT:
+SELECT EmployeeID, Salary, (SELECT AVG(Salary) FROM EmployeeSalary) AS AllAvgSalary
+FROM EmployeeSalary
+
+-- com PARTITION BY: (resultado é o mesmo)
+SELECT EmployeeID, Salary,  AVG(Salary) OVER() AS AllAvgSalary
+FROM EmployeeSalary
+
+-- porque não funciona com GROUP BY:
+SELECT EmployeeID, Salary,  AVG(Salary)  AS AllAvgSalary
+FROM EmployeeSalary
+GROUP BY EmployeeID, Salary
+ORDER BY 1,2
+-- não funciona porque vai agrupar para cada caso que for igual. como os IDs são únicos, não tem com o que fazer média...
+
+-- subquerry em FROM: (é melhor usar CTE e principalemnte temp table)
+SELECT a.EmployeeID, AllAvgSalary
+FROM (SELECT EmployeeID, Salary,  AVG(Salary) OVER() AS AllAvgSalary
+	  FROM EmployeeSalary) a
+
+-- subquery em WHERE: (pode substituir algumas funções do join. neste exemplo coloca requisitos para uma coluna em outra tabela)
+-- obs.: em WHERE não pode ter uma subquery retornando mais de uma coluna no select
+SELECT EmployeeID, JobTitle, Salary
+FROM EmployeeSalary
+WHERE EmployeeID in (
+		SELECT EmployeeID
+		FROM EmployeeDemographics
+		WHERE Age > 30)
