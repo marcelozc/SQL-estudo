@@ -1,0 +1,51 @@
+-- Funções com strings
+
+CREATE TABLE SQLTutorial.dbo.EmployeeErrors (
+EmployeeID varchar(50),
+FirstName varchar(50),
+LastName varchar(50)
+)
+
+-- dados com erros
+INSERT INTO SQLTutorial.dbo.EmployeeErrors VALUES
+('1001 ', 'Jimbo', 'Halbert'),
+(' 1002', 'Palmela', 'Beasely'),
+('1005', 'TOby', 'Flenderson - Fired')
+
+SELECT *
+FROM SQLTutorial.dbo.EmployeeErrors
+
+
+-- como corrigir os erros usando ...
+-- TRIM, LTRIM e RTRIM (L para left R para right). TRIM tira os espaços brancos na frente e atrás
+SELECT EmployeeID, TRIM(EmployeeID) AS IDTRIM
+FROM SQLTutorial.dbo.EmployeeErrors
+
+SELECT EmployeeID, LTRIM(EmployeeID) AS IDTRIM
+FROM SQLTutorial.dbo.EmployeeErrors
+
+SELECT EmployeeID, RTRIM(EmployeeID) AS IDTRIM
+FROM SQLTutorial.dbo.EmployeeErrors
+
+-- REPLACE(coluna que quer substituir, parte que vai substituir, o que deve ficar)
+SELECT LastName, REPLACE(LastName, '- Fired', '') AS LastNameFixed
+FROM SQLTutorial.dbo.EmployeeErrors
+
+-- SUBSTRING: especifica onde vai começar e quantos caracteres vai mostrar
+SELECT SUBSTRING(FistName,1,3) -- vai começar do primeiro caracter e vai "imprimir" 3 contando com o primeiro
+FROM SQLTutorial.dbo.EmployeeErrors
+
+--exemplo de uso:
+-- casos em que há erros de dados, pode juntar e comparar apenas partes das strings
+SELECT SUBSTRING(err.FirstName,1,3), SUBSTRING(dem.FirstName,1,3)
+FROM SQLTutorial.dbo.EmployeeErrors err
+JOIN SQLTutorial.dbo.EmployeeDemographics dem
+	ON SUBSTRING(err.FirstName,1,3) = SUBSTRING(dem.FirstName,1,3)
+-- funciona melhor para dados como genero, sobrenome, idade e dia de nascimento (pode usar tudo ao mesmo tempo)
+
+-- UPPER e LOWER
+SELECT FirstName, LOWER(FirstName)
+FROM SQLTutorial.dbo.EmployeeErrors
+
+SELECT FirstName, UPPER(FirstName)
+FROM SQLTutorial.dbo.EmployeeErrors
