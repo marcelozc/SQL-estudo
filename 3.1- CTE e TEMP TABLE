@@ -1,0 +1,61 @@
+-- CTE: Common Table Expression
+-- parecido com uma sub querie, é uma tabela que existe apenas enquanto acontece a consulta
+
+WITH CTE_Employee AS 
+(SELECT FirstName, LastName, Gender, Salary,
+COUNT(Gender) OVER (PARTITION BY Gender) AS TotalGender,
+AVG(Salary) OVER (PARTITION BY Gender) AS AvgSalary
+FROM SQLTutorial.dbo.EmployeeDemographics emp
+JOIN SQLTutorial.dbo.EmployeeSalary sal
+	ON emp.EmployeeID = sal.EmployeeID
+WHERE Salary >'45000'
+)
+SELECT *
+FROM CTE_Employee
+
+-- Só é possível usar SELECT x FROM CTE logo após criar ela
+
+
+-- Temp Tables: temporarie tables
+-- diferente das CTE e sub query que só pode usar uma vez, temp tables podem ser usadas várias vezes
+-- para criar é só usar um # antes do nome
+CREATE TABLE #temp_Employee (
+EmployeeID int,
+JobTitle varchar(100),
+Salary int
+)
+
+SELECT *
+FROM #temp_Employee
+
+INSERT INTO #temp_Employee VALUES (
+'1001', 'HR', '45000'
+)
+
+-- outra forma de inserir dados é inserir uma tabela inteira já existente em uma tabela temporária
+-- é a forma mais usada. 
+-- é o grande uso das temp table
+-- exemplo se a tabela employeeSalary tivesse milhões de linhas, poderíamos colocar apenas as seções que queremos usar em uma temp table
+INSERT INTO #temp_Employee
+SELECT *
+FROM SQLTutorial.dbo.EmployeeSalary
+
+-- Exemplo prático de uso
+-- esse drop table if exists permite rodar todo o código várias vezes, já que a tabela anteriormente criada será excluida
+DROP TABLE IF EXISTS #temp_Employee2
+CREATE TABLE #temp_Employee2 (
+JobTitle varchar(50),
+EmployeesPerJob int,
+AvgAge int,
+AvgSalary int
+)
+
+INSERT INTO #temp_Employee2
+SELECT JobTitle, COUNT(JobTitle), AVG(Age), AVG(Salary)
+FROM SQLTutorial.dbo.EmployeeDemographics emp
+JOIN SQLTutorial.dbo.EmployeeSalary sal
+	ON emp.EmployeeID = sal.EmployeeID
+GROUP BY JobTitle
+
+SELECT *
+FROM #temp_Employee2
