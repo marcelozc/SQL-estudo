@@ -1,0 +1,39 @@
+-- STORED PROCEDURE (armazenar procedimento): é um grupo de procedimentos SQL armazenados no banco de dados. 
+-- Podem ser usados por vários usuários na rede. Reduz o tráfego e aumenta a performance. Se modificar esse Stored Procedure, todos que usam ele vão receber o update
+
+--criar o procedimento
+CREATE PROCEDURE TEST
+AS
+SELECT *
+FROM EmployeeDemographics
+
+-- executando 
+EXEC TEST
+
+-- exemplo mais complexo
+CREATE PROCEDURE Temp_Employee
+AS
+CREATE TABLE #temp_employee (
+JobTitle varchar(100),
+EmployeePerJob int,
+AvgAge int,
+AvgSalary int
+)
+
+INSERT INTO #temp_employee
+SELECT JobTitle, COUNT(JobTitle), AVG(Age), AVG(Salary)
+FROM SQLTutorial.dbo.EmployeeDemographics emp
+JOIN SQLTutorial.dbo.EmployeeSalary sal
+	ON emp.EmployeeID = sal.EmployeeID
+GROUP BY JobTitle
+
+SELECT *
+FROM #temp_employee
+
+EXEC Temp_Employee
+
+-- é possível usar o EXEC com requisitos. Para isso deve modificar o procedimento e add um parâmetro.
+-- o parâmetro pode ser colocado em baixo de ALTER PROCEDURE por exemplo como @JobTitle nvarchar(100) e depois no INSERT INTO, coloca onde quer. aqui no exemplo vai fazer WHERE JobTitle = @JobTitle
+-- aí usa @profissão que quer
+
+EXEC Temp_Employee @JobTitle = 'Accountant'
